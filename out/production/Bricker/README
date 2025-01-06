@@ -1,0 +1,64 @@
+amithalbreich
+208917393
+
+The design can also be found in the attached javadocs.
+Comment: I created only 2 Puck Objects and removed up diagonals pucks creation so the game won't end too soon.
+The design I chose for 3.2 Bricker Game exercise includes mostly inheritance - the reason I chose to implement the
+design with inheritance is that I wanted to leave the API as it was and don't make any big changes as instructed.
+Because CollisionStrategy was implemented as a Class and not an interface originally I chose to use inheritance for each
+of the BrickStrategy classes, so when each strategy will be activated it will perform OnCollision method and the brick
+will be removed when hit by the Ball/Puck but also will be "decorated" with unique strategy that it gets in the raffle.
+The main class which is responsible for constructing the Brick Strategies is a "factory" class called
+"BrickStrategyFactory" - this class gets all relevant field and variables fo constructing all types of Strategies given
+to implement in the BrickerGame using switch-case statement.
+In order to complete the design of the game I created additional classes for each Strategy and supporting classes:
+AddPaddleStrategy, ChangeCameraStrategy, PuckStrategy, GetExtraLifeStrategy, DoubleDownStrategy.
+
+ 1. AddPaddleStrategy class - Inherits from CollisionStrategy and as an extra creates a MockPaddle in the middle of
+   the screen.
+ 2. ChangeCameraStrategy class - responsible for ChangeCameraStrategy kind of Brick CollisionStrategy which focuses the
+   camera on the Ball when hitting a brick with this type of Strategy.
+ 3. PuckStrategy cass- kind of CollisionStrategy and inherits from this class. When this strategy is activated, when
+   shattering a brick with this kind of strategy 3 Puck Objects will come out from the middle of the brick in different
+   Diagonals in 45 degrees.
+ 4. GetExtraLifeStrategy class - responsible for GetExtraLifeStrategy inherits of Brick CollisionStrategy.
+   When a brick carrying this strategy shatters - an ExtraLife heart will drop from the middle of the brick.
+   If the user will collect the ExtraLife falling from the brick with the main Paddle - he will get ExtraLife and
+   his livesCounter will be increased by 1. Maximum is 4 Lives.
+ 5. DoubleDownStrategy class - This class describes a kind of strategy that inherits from CollisionStrategy.
+   In this strategy once a brick with this strategy shatters, multiple strategies will be activated according to the
+   number of doubles were raffled in the strategy "lottery". The strategies will be raffled from the list:
+   [1-AddPaddleStrategy, 2-ChangeCameraStrategy, 3-PuckStrategy, 4-GetExtraLifeStrategy, 5-DoubleDownStrategy]
+
+Supporting classes for AddPaddleStrategy are MockPaddle which inherits from Paddle and MockPaddleCollisionCountdownAgent
+MockPaddle class is responsible for the ExtraPaddle Object creation and is called from the AddPaddleStrategy class when
+activated. MockPaddleCollisionCountdownAgent - is responsible for managing the countdown of the max collisions allowed
+for the MockPaddle to be collided with.
+Supporting class for ChangeCameraStrategy is BallCollisionCountdownAgent which is responsible for the logics of max 4
+collisions of the ball with other objects that changes the camera back to normal view without focusing on the ball.
+Supporting class for PuckStrategy is Puck (MockBall) which inherits from ball with slight differences - the balls color
+is metallic-white and the balls are a third of bricks width and slightly smaller, also Camera won't focus on the Pucks
+when ChangeCameraStrategy is activated.
+Supporting class for GetExtraLifeStrategy is ExtraLife Game Object which manages the falling ExtraLife object falling
+from the shattered brick with this strategy. Object will disappear on collision with the paddle or when it is not
+collected in time - reaches the end of the window Y Dimensions. Also I made changes in GraphicLifeCounter and
+NumericLifeCounter objects in order to support 4 lives maximum and adding life to the livesCount and not only reducing
+life.
+DoubleDownStrategy restricts the number of Max Strategies allowed for a single brick by holding an array of maximum 3
+strategies according to the given probabilities behaviour given in the game instructions.
+After filling the array holding indices - which represents each a different strategy to build by the
+BrickStrategyFactory the DoubleDownStrategy will activate each strategy using "for" loop and the OnCollision inherited
+method from CollisionStrategy to activate all strategies given to the specific brick.
+
+If we want to expand the number of strategies we can change the size of the array and change the conditions according to
+the new given instructions for strategies raffle.
+
+The changes I made in the API are very small - all original classes from exercise 3.1 were preserved excluding
+GraphicLifeCounter and NumericLifeCounter.
+GraphicLifeCounter - I changed the logics so it will support also Increasing life object count and the array of heart
+objects supports 4 Objects - Heart visuals will decrease/increase according to the collected ExtraLife or life lost.
+I also added a livesCounter Getter and incrementLivesCounter public functions so I could change the liveCounter from the
+GetExtraLifeStrategy class.
+Rather than that I didn't change much in the Game's original API and all previous classes remained as they were.
+Only new classes for new GameObjects and Strategy were added to the list of classes.
+
